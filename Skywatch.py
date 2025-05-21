@@ -2303,7 +2303,8 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail
             len_features=1
         avgarea=int(gdfbuff['optimized_area'].sum())/int(len_features)
         newdfquote=pd.DataFrame([[bufferedtext,len_features,gdfbuff['optimized_area'].sum(),avgarea,quote_type]],columns=dfquote.columns)
-        dfquote=dfquote.append(newdfquote,ignore_index=True)
+        #dfquote=dfquote.append(newdfquote,ignore_index=True)
+        dfquote = pd.concat([dfquote, newdfquote],ignore_index=True)
         if quote_type == "Tasking":
             files=f'{filepath}/tasking_areaoutput{round(buffer_interval-start_interval,2)}'
         else:
@@ -2489,6 +2490,7 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
             concave_gs=gpd.GeoSeries(alphalist)
             concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
             concave_output=concave_output.append(concave_gdf,ignore_index=True)
+            
     return concave_output
 
 def area_group(gdfclean,quote_type,minarea,filepath=''):
