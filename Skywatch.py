@@ -2154,7 +2154,8 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail
         len_features=1
     avgarea=int(gdfclean['optimized_area'].sum())/int(len_features)
     dfquote2=pd.DataFrame([[bufferedtext,len_features,gdfclean['optimized_area'].sum(),avgarea,quote_type]],columns=dfquote.columns)
-    dfquote=dfquote.append(dfquote2)
+    #dfquote=dfquote.append(dfquote2)
+    dfquote = pd.concat([dfquote, dfquote2])
     print(dfquote)
     print(dfquote.columns)
     if quote_type == "Tasking":
