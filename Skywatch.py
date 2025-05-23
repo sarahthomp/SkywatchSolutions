@@ -1123,6 +1123,8 @@ def create_search(location,start_date,end_date,api_key,resolution,coverage, min_
     '''This function takes in a GeoJSON-formated polygon, a start date, an end date, and an EC API key.
     This will use EC's Search API to poll for high resolution archive data. It returns the search ID
     '''
+    min_ona = int(min_ona)
+    max_ona = int(max_ona)
     
     template = { "location": { "type": "Polygon", "coordinates": [ [ [ 15.992038, 29.219 ], [ 19.006121, 48.211319 ], [ 162.006121, 29.204986 ], [ 55.992038, 13.204986 ], [-1915.992038, 79.211319 ] ] ] }, "start_date": "2019-01-01", "end_date": "2020-09-29", "resolution": "low", "coverage": "0","order_by":["coverage", "resolution", "cost"], "off_nadir_angle": [min_ona, max_ona]
 }
@@ -2154,8 +2156,7 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail
         len_features=1
     avgarea=int(gdfclean['optimized_area'].sum())/int(len_features)
     dfquote2=pd.DataFrame([[bufferedtext,len_features,gdfclean['optimized_area'].sum(),avgarea,quote_type]],columns=dfquote.columns)
-    #dfquote=dfquote.append(dfquote2)
-    dfquote = pd.concat([dfquote, dfquote2])
+    dfquote=dfquote.append(dfquote2)
     print(dfquote)
     print(dfquote.columns)
     if quote_type == "Tasking":
@@ -2303,8 +2304,7 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail
             len_features=1
         avgarea=int(gdfbuff['optimized_area'].sum())/int(len_features)
         newdfquote=pd.DataFrame([[bufferedtext,len_features,gdfbuff['optimized_area'].sum(),avgarea,quote_type]],columns=dfquote.columns)
-        #dfquote=dfquote.append(newdfquote,ignore_index=True)
-        dfquote = pd.concat([dfquote, newdfquote],ignore_index=True)
+        dfquote=dfquote.append(newdfquote,ignore_index=True)
         if quote_type == "Tasking":
             files=f'{filepath}/tasking_areaoutput{round(buffer_interval-start_interval,2)}'
         else:
@@ -2490,7 +2490,6 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
             concave_gs=gpd.GeoSeries(alphalist)
             concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
             concave_output=concave_output.append(concave_gdf,ignore_index=True)
-            
     return concave_output
 
 def area_group(gdfclean,quote_type,minarea,filepath=''):
@@ -3083,6 +3082,8 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
         # m.add_child(aoi)
 
         imagery_group=folium.FeatureGroup('Imagery Coverage',show=True)
+
+        # Coverage map legend
 
         for idx,cur_row in enumerate(range(len(cloudsortgdf))):
             cur_row_gdf=cloudsortgdf.iloc[[cur_row]]
