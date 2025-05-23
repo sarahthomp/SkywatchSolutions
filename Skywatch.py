@@ -3016,7 +3016,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
             collectiontime=date.split('T')[-1]
             date=date.split('T')[0]
             tpoly=geojson.Polygon(data['location']['coordinates'])
-            feat = geojson.Feature(geometry=tpoly,properties={"id":data['product_name'],"cc":data['location_coverage_percentage'],"preview":data['preview_uri'],"clouds":data['result_cloud_cover_percentage'],"date":date, "resolution":data['resolution'], "source":data['source'],"bbox":data['location']['bbox'], "off_nadir_angle":data["off_nadir_angle"], "identifier":"%s_%s_%s" % (data['product_name'], date, data['source'])})
+            feat = geojson.Feature(geometry=tpoly,properties={"id":data['product_name'],"cc":data['location_coverage_percentage'],"preview":data['preview_uri'],"clouds":data['result_cloud_cover_percentage'],"date":date, "resolution":data['resolution'], "source":data['source'],"bbox":data['location']['bbox'], "off_nadir_angle":data["off_nadir_angle"], "identifier":"%s_%s_%s" % (data['source'], data['product_name'], date)})
             featlist.append(feat)
         
             #feat['feature'].
